@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102c30">
+  <meta name="description" content="Тихий маршрут — прогулки по Светлоречью под ваше настроение, свободное время и желаемый уровень шума.">
+  <title>Тихий маршрут — в голове становится тише</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./redesign.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="header wrap">
+    <a class="brand" href="#" aria-label="Тихий маршрут — на главную"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 30c0-13 20-7 20-20M10 10h.01M30 30h.01"/></svg><span>тихий маршрут</span></a>
+    <nav aria-label="Основная навигация"><a href="#how">Как это работает</a><a href="#walks">Прогулки</a></nav>
+    <a class="header-cta" href="#finder">Найти маршрут <span aria-hidden="true">↗</span></a>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-backdrop" aria-hidden="true"><img id="hero-image" src="./assets/embankment.webp" alt="" width="1536" height="1024" fetchpriority="high"></div>
+      <div class="hero-inner wrap">
+        <div class="hero-copy">
+          <p class="eyebrow hero-kicker"><span class="small-line"></span> СВЕТЛОРЕЧЬЕ / ГОРОД ДЛЯ ПЕШИХ МЫСЛЕЙ</p>
+          <h1 id="hero-title">Маршрут,<br>после которого<br>в голове<br><em>становится тише.</em></h1>
+          <p class="intro">Иногда лучший план — выйти без спешки. Подберём прогулку под ваше настроение, время и желаемый уровень тишины.</p>
+          <a class="button hero-button" href="#finder">Подобрать прогулку <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-stamp" aria-hidden="true"><span>01</span><span>Город<br>потише</span><span>≈</span></div>
+        <div class="hero-bottom">
+          <div class="scene-switcher" role="group" aria-label="Выберите атмосферу прогулки">
+            <button class="scene-button is-active" type="button" data-scene="quiet" aria-pressed="true"><span>01</span> У воды</button>
+            <button class="scene-button" type="button" data-scene="nature" aria-pressed="false"><span>02</span> Среди зелени</button>
+            <button class="scene-button" type="button" data-scene="city" aria-pressed="false"><span>03</span> В ритме города</button>
+          </div>
+          <button class="pause-button" id="pause-toggle" type="button" aria-expanded="false" aria-controls="pause-panel"><span class="pause-icon" aria-hidden="true">◎</span><span>Пауза на минуту</span></button>
+        </div>
+      </div>
+      <div class="pause-panel" id="pause-panel" hidden role="status" aria-live="polite"><div class="breath-orb" aria-hidden="true"></div><div><strong id="breath-text">Вдохните медленно</strong><span>Никуда не нужно спешить.</span></div><button id="pause-close" type="button" aria-label="Закрыть паузу">×</button></div>
+    </section>
+
+    <section class="how wrap" id="how" aria-labelledby="how-title">
+      <div class="section-heading"><p class="eyebrow">МАРШРУТ ПОД ВАШ РИТМ</p><h2 id="how-title">У города много маршрутов. <em>У вас — свой.</em></h2></div>
+      <div class="steps"><article><span class="step-number">01</span><h3>Как вы сейчас?</h3><p>Хочется выдохнуть, найти новую мысль или просто сменить картинку?</p></article><article><span class="step-number">02</span><h3>Сколько есть времени?</h3><p>Двадцать минут между делами или целый час только для себя.</p></article><article><span class="step-number">03</span><h3>Насколько тихо?</h3><p>Шелест листвы, плеск воды или негромкая жизнь соседних улиц.</p></article></div>
+    </section>
+
+    <section class="finder-shell" id="finder" aria-labelledby="finder-title">
+      <div class="wrap finder">
+        <div class="finder-top"><div><p class="eyebrow">ПАРА СЛОВ О ВАШЕМ ДНЕ</p><h2 id="finder-title">Куда пойдём сегодня?</h2></div><p>Три простых выбора —<br>и город подстроится под вас.</p></div>
+        <form id="walk-form">
+          <fieldset><legend><span>01</span> Моё настроение</legend><div class="choices mood-choices"><label><input type="radio" name="mood" value="breathe" checked><span>Выдохнуть</span></label><label><input type="radio" name="mood" value="focus"><span>Собраться с мыслями</span></label><label><input type="radio" name="mood" value="inspire"><span>Вдохновиться</span></label></div></fieldset>
+          <fieldset><legend><span>02</span> Время на прогулку</legend><div class="choices time-choices"><label><input type="radio" name="time" value="20"><span>20 минут</span></label><label><input type="radio" name="time" value="40" checked><span>40 минут</span></label><label><input type="radio" name="time" value="60"><span>60 минут</span></label></div></fieldset>
+          <fieldset><legend><span>03</span> Звуки вокруг</legend><div class="choices sound-choices"><label><input type="radio" name="sound" value="quiet" checked><span>Почти тишина</span></label><label><input type="radio" name="sound" value="nature"><span>Звуки природы</span></label><label><input type="radio" name="sound" value="city"><span>Негромкая жизнь города</span></label></div></fieldset>
+          <div class="form-bottom"><p>Никаких правильных ответов.<br>Только то, что подходит вам сейчас.</p><button class="button primary" type="submit">Подобрать прогулку</button></div>
+        </form>
+        <div id="result" class="result" hidden aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </section>
+
+    <section class="walks wrap" id="walks" aria-labelledby="walks-title">
+      <div class="walks-heading"><div><p class="eyebrow">ЗНАКОМЬТЕСЬ, СВЕТЛОРЕЧЬЕ</p><h2 id="walks-title">Места, где можно<br>никуда не торопиться.</h2></div><p>У воды, в тени деревьев, за поворотом.<br>У каждого места — свой способ замедлиться.</p></div>
+      <div class="walk-grid">
+        <article class="walk-card"><div class="card-photo"><img src="./assets/embankment.webp" alt="Дорожка вдоль спокойной реки в Светлоречье" width="1536" height="1024" loading="lazy"><span class="time-badge">40 минут</span></div><div class="card-meta"><span>01 / У ВОДЫ</span><span>Почти тишина</span></div><h3>Вдоль тихой воды</h3><p>Идти вдоль реки, смотреть на отражения и постепенно отпускать длинный день.</p><button class="text-button" type="button" data-preset="water">Хочу такую прогулку <span aria-hidden="true">+</span></button></article>
+        <article class="walk-card"><div class="card-photo"><img src="./assets/courtyard.webp" alt="Зелёные ворота, скамейка и тенистый двор Светлоречья" width="1536" height="1024" loading="lazy"><span class="time-badge">20 минут</span></div><div class="card-meta"><span>02 / СРЕДИ ЗЕЛЕНИ</span><span>Звуки природы</span></div><h3>Дворы с зелёными воротами</h3><p>Свернуть с привычной улицы туда, где слышно птиц, а солнце играет в листве.</p><button class="text-button" type="button" data-preset="garden">Хочу такую прогулку <span aria-hidden="true">+</span></button></article>
+        <article class="walk-card"><div class="card-photo"><img src="./assets/canal.webp" alt="Светлые дома и мощёная улица у узкого канала на утреннем солнце" width="1536" height="1024" loading="lazy"><span class="time-badge">60 минут</span></div><div class="card-meta"><span>03 / В РИТМЕ ГОРОДА</span><span>Негромкая жизнь</span></div><h3>Утро у канала</h3><p>Замечать цветные двери, маленькие мосты и город, который только просыпается.</p><button class="text-button" type="button" data-preset="canal">Хочу такую прогулку <span aria-hidden="true">+</span></button></article>
+      </div>
+    </section>
+    <section class="closing wrap"><span class="closing-mark" aria-hidden="true">≈</span><p>Не обязательно знать, куда идти.<br><em>Можно просто идти.</em></p><a href="#finder">Найти свою прогулку</a></section>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="#">тихий маршрут</a><span>Можно просто идти.</span><span>© 2026 Тихий маршрут</span></footer>
+</body>
+</html>
+
