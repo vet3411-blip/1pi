@@ -15,6 +15,11 @@ function showResult() {
   const list = document.createElement('ol'); list.className = 'route-line'; list.setAttribute('aria-label','Места на маршруте');
   for (const [index, stop] of route.stops.entries()) { const item = document.createElement('li'); const number = document.createElement('span'); number.textContent = String(index + 1).padStart(2,'0'); item.append(number,document.createTextNode(stop)); list.append(item); }
   result.append(head,list); result.hidden = false;
+  result.classList.remove('is-revealing');
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    void result.offsetWidth;
+    result.classList.add('is-revealing');
+  }
   result.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 }
 form.addEventListener('submit',event=>{ event.preventDefault(); showResult(); });
