@@ -86,6 +86,7 @@ for (const button of sceneButtons) button.addEventListener('click',()=>{
   updateHeroImage();
 });
 for (const button of timeButtons) button.addEventListener('click',()=>{
+  if (timeMode === button.dataset.timeMode) return;
   timeMode = button.dataset.timeMode;
   document.body.classList.toggle('night-mode',timeMode === 'night');
   for (const item of timeButtons) item.setAttribute('aria-pressed',String(item === button));
@@ -98,6 +99,12 @@ for (const button of timeButtons) button.addEventListener('click',()=>{
     card.querySelector('p').textContent = timeMode === 'night' ? nightCardCopy[index].description || cardCopies[index].description : cardCopies[index].description;
   }
   updateHeroImage();
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const hero = document.querySelector('.hero');
+    hero.classList.remove('is-time-shifting');
+    void hero.offsetWidth;
+    hero.classList.add('is-time-shifting');
+  }
   if (!result.hidden) showResult({scroll:false});
 });
 form.addEventListener('change',event=>{
@@ -120,4 +127,29 @@ pauseToggle.addEventListener('click',()=>{
 });
 pauseClose.addEventListener('click',closePause);
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!pausePanel.hidden)closePause();});
+
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+if ('IntersectionObserver' in window && !reducedMotion.matches) {
+  const revealSelectors = ['.section-heading','.steps article','.finder-top','#walk-form','.walks-heading','.walk-card','.closing'];
+  const targets = revealSelectors.flatMap(selector => [...document.querySelectorAll(selector)]);
+  for (const selector of revealSelectors) {
+    document.querySelectorAll(selector).forEach((element,index) => {
+      element.classList.add('reveal-item');
+      element.style.setProperty('--reveal-delay',`${Math.min(index,2) * 110}ms`);
+    });
+  }
+  document.body.classList.add('motion-ready');
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    }
+  },{threshold:0.1,rootMargin:'0px 0px -32px 0px'});
+  targets.forEach(target => observer.observe(target));
+  reducedMotion.addEventListener('change',event => {
+    if (!event.matches) return;
+    observer.disconnect();
+    document.body.classList.remove('motion-ready');
+  },{once:true});
+}
 
