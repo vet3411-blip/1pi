@@ -123,8 +123,27 @@ pauseClose.addEventListener('click',closePause);
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!pausePanel.hidden)closePause();});
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+function updateFinderAtmosphere() {
+  const values = Object.fromEntries(new FormData(form));
+  const scene = sceneImages[values.sound];
+  const preview = document.querySelector('#finder-atmosphere-image');
+  preview.src = scene[timeMode];
+  preview.alt = scene.alt;
+  const moods = {breathe:'Выдохнуть.',focus:'Побыть с мыслями.',inspire:'Увидеть новое.'};
+  const places = {quiet:'У тихой воды.',nature:'В тени деревьев.',city:'У старого канала.'};
+  document.querySelector('#finder-atmosphere-title').replaceChildren(document.createTextNode(moods[values.mood]),document.createElement('br'),document.createTextNode(places[values.sound]));
+  document.querySelector('#finder-atmosphere-time').textContent = `${values.time} минут только для себя`;
+  const storyPhotos = document.querySelectorAll('.city-story img');
+  storyPhotos[0].src = sceneImages.nature[timeMode];
+  storyPhotos[0].alt = timeMode === 'night' ? nightCardCopy[1].alt : sceneImages.nature.alt;
+  storyPhotos[1].src = sceneImages.city[timeMode];
+  storyPhotos[1].alt = timeMode === 'night' ? nightCardCopy[2].alt : sceneImages.city.alt;
+}
+form.addEventListener('change',updateFinderAtmosphere);
+[...sceneButtons,...timeButtons].forEach(button=>button.addEventListener('click',updateFinderAtmosphere));
+updateFinderAtmosphere();
 if ('IntersectionObserver' in window && !reducedMotion.matches) {
-  const revealSelectors = ['.section-heading','.steps article','.finder-top','#walk-form','.walks-heading','.walk-card','.closing'];
+  const revealSelectors = ['.section-heading','.steps article','.finder-top','#walk-form','.walks-heading','.story-copy','.story-main','.story-detail','.closing'];
   const targets = revealSelectors.flatMap(selector => [...document.querySelectorAll(selector)]);
   for (const selector of revealSelectors) {
     document.querySelectorAll(selector).forEach((element,index) => {
@@ -194,7 +213,7 @@ if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{carouse
 else carouselVisible = true;
 setInterval(()=>{
   if (carouselVisible && !carouselPaused && !reducedMotion.matches && motionToggle.getAttribute('aria-pressed') !== 'true' && Date.now() > userPauseUntil && !document.hidden && !document.querySelector('#route-dialog').open) moveCarousel(activeWalk + 1);
-},5200);
+},7000);
 if (reducedMotion.matches) motionToggle.hidden = true;
 reducedMotion.addEventListener('change',event=>{motionToggle.hidden = event.matches;});
 
@@ -203,6 +222,15 @@ const dialogImage = document.querySelector('#route-dialog-image');
 const dialogTitle = document.querySelector('#route-dialog-title');
 const dialogDescription = document.querySelector('#route-dialog-description');
 const dialogStops = document.querySelector('#route-dialog-stops');
+const stopNote = document.createElement('p');
+stopNote.className = 'route-stop-note';
+stopNote.setAttribute('aria-live','polite');
+document.querySelector('#route-dialog-choose').before(stopNote);
+const stopNotes = {
+  water:['Начните у ив, нависающих над водой. Посмотрите, как свет меняется на поверхности реки.','Сверните с набережной. Здесь особенно хорошо слышны собственные шаги.','Остановитесь у сада: деревья и небо складываются в воде в другую картину.','С середины моста оглянитесь назад. Пройденный путь выглядит совсем иначе.'],
+  garden:['Зелёные ворота открывают маленький двор, спрятанный от большой улицы.','Найдите скамейку под липой. Здесь можно ничего не делать несколько минут.','Пройдите между яблонями и посмотрите вверх, сквозь ветви.'],
+  canal:['Начните на маленькой площади у старого фонаря. Выберите свой темп.','Обратите внимание на двери: у каждой свой оттенок и своя история.','Идите вдоль канала, наблюдая за отражениями фасадов.','Задержитесь на мосту. Отсюда видны оба берега и следующий поворот.','Последняя остановка — набережная. Останьтесь ещё немного, если хочется.']
+};
 let selectedPreset = 'water';
 let returnFocus = null;
 let chooseFromDialog = false;
@@ -219,17 +247,27 @@ function openRoutePreview(button) {
   document.querySelector('#route-dialog-sound').textContent = route.sound;
   dialogStops.replaceChildren(...route.stops.map((stop,index)=>{
     const item = document.createElement('li');
+    const choice = document.createElement('button'); choice.type = 'button';
+    choice.setAttribute('aria-pressed',String(index === 0));
     const number = document.createElement('span'); number.textContent = String(index+1).padStart(2,'0');
-    item.append(number,document.createTextNode(stop));
+    choice.append(number,document.createTextNode(stop));
+    choice.addEventListener('click',()=>{
+      dialogStops.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button === choice)));
+      stopNote.textContent = stopNotes[selectedPreset][index];
+    });
+    item.append(choice);
     return item;
   }));
+  stopNote.textContent = stopNotes[selectedPreset][0];
   returnFocus = button;
+  document.documentElement.classList.add('route-open');
   routeDialog.showModal();
+  routeDialog.scrollTop = 0;
 }
 document.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>openRoutePreview(button)));
 document.querySelector('#route-dialog-close').addEventListener('click',()=>routeDialog.close());
 routeDialog.addEventListener('click',event=>{if (event.target === routeDialog) routeDialog.close();});
-routeDialog.addEventListener('close',()=>{if (!chooseFromDialog) returnFocus?.focus(); chooseFromDialog = false;});
+routeDialog.addEventListener('close',()=>{document.documentElement.classList.remove('route-open');if (!chooseFromDialog) returnFocus?.focus(); chooseFromDialog = false;});
 document.querySelector('#route-dialog-choose').addEventListener('click',()=>{
   chooseFromDialog = true;
   routeDialog.close();
