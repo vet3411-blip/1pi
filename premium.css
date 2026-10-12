@@ -162,3 +162,18 @@ body.motion-ready .reveal-item.is-visible{opacity:1;transform:translateY(0)}
 @media(max-width:760px){.result .route-line::before{left:6px;right:auto;top:25px;bottom:0;width:1px;height:auto;transform:scaleY(0);transform-origin:top}.result.is-revealing .route-line::before{animation-name:premium-trace-vertical}}
 @keyframes premium-trace-vertical{to{transform:scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.hero-kicker,.hero h1,.hero .intro,.hero-button,.hero-bottom,.hero.is-time-shifting::before,.result.is-revealing .route-line::before{animation:none!important}body.motion-ready .reveal-item{opacity:1;transform:none;transition:none}}
+
+/* A living first screen: slow cinematic movement, a route orbit, and a passing gleam. */
+.hero-backdrop{animation:premium-scene-drift 16s ease-in-out infinite alternate}
+.hero-backdrop::before{content:"";position:absolute;z-index:1;inset:-15%;pointer-events:none;background:radial-gradient(circle at 75% 48%,#ecf8d51f,transparent 34%);mix-blend-mode:screen;animation:premium-light 8s ease-in-out infinite alternate}
+.night-mode .hero-backdrop::before{background:radial-gradient(circle at 72% 45%,#d7e8ff25,transparent 32%)}
+.hero-stamp::before{content:"";position:absolute;inset:-12px;border:1px dashed #e6f0d3ad;border-radius:50%;animation:premium-orbit 18s linear infinite}
+.hero-stamp::after{content:"";position:absolute;top:-15px;left:50%;width:8px;height:8px;border-radius:50%;background:#e8f2d6;box-shadow:0 0 0 5px #e8f2d633,0 0 18px #e8f2d6;transform-origin:0 calc(50% + 80px);animation:premium-orbit 18s linear infinite}
+.hero-button{position:relative;overflow:hidden}
+.hero-button::before{content:"";position:absolute;inset:-40% auto -40% 0;width:35%;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff80,transparent);transform:translateX(-180%) skewX(-22deg);animation:premium-gleam 5.5s ease-in-out infinite}
+@keyframes premium-scene-drift{from{transform:scale(1) translateX(0)}to{transform:scale(1.075) translateX(-.8%)}}
+@keyframes premium-light{from{opacity:.3;transform:translateX(-3%)}to{opacity:1;transform:translateX(3%)}}
+@keyframes premium-orbit{to{transform:rotate(360deg)}}
+@keyframes premium-gleam{0%,72%,100%{transform:translateX(-180%) skewX(-22deg)}86%{transform:translateX(360%) skewX(-22deg)}}
+@media(max-width:760px){.hero-stamp::before{inset:-7px}.hero-stamp::after{top:-10px;width:6px;height:6px;transform-origin:0 calc(50% + 45px)}}
+@media(prefers-reduced-motion:reduce){.hero-backdrop,.hero-backdrop::before,.hero-stamp::before,.hero-stamp::after,.hero-button::before{animation:none!important}}
