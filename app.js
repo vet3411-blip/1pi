@@ -32,13 +32,6 @@ function showResult({scroll = true} = {}) {
   if (scroll) result.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 }
 form.addEventListener('submit',event=>{ event.preventDefault(); showResult(); });
-document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',()=>{
-  const preset = presets[button.dataset.preset];
-  for (const [key,value] of Object.entries(preset)) form.elements.namedItem(key).value = String(value);
-  sceneButtons.find(item=>item.dataset.scene===preset.sound)?.click();
-  showResult();
-  result.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
-}));
 
 const sceneImages = {
   quiet: {day:'./assets/embankment.webp',night:'./assets/embankment-night.webp',alt:'Тихая набережная Светлоречья с мостом над водой'},
@@ -97,6 +90,7 @@ for (const button of timeButtons) button.addEventListener('click',()=>{
     const card = image.closest('.walk-card');
     card.querySelector('h3').textContent = timeMode === 'night' ? nightCardCopy[index].title || cardCopies[index].title : cardCopies[index].title;
     card.querySelector('p').textContent = timeMode === 'night' ? nightCardCopy[index].description || cardCopies[index].description : cardCopies[index].description;
+    card.querySelector('.card-photo').setAttribute('aria-label',`Посмотреть маршрут ${card.querySelector('h3').textContent}`);
   }
   updateHeroImage();
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -152,4 +146,96 @@ if ('IntersectionObserver' in window && !reducedMotion.matches) {
     document.body.classList.remove('motion-ready');
   },{once:true});
 }
+
+const carousel = document.querySelector('#walk-carousel');
+const walkCards = [...carousel.querySelectorAll('.walk-card')];
+const carouselCount = document.querySelector('#walk-carousel-count');
+const motionToggle = document.querySelector('#walk-motion-toggle');
+let activeWalk = 0;
+let carouselVisible = false;
+let carouselPaused = false;
+let userPauseUntil = 0;
+function updateCarouselCount() { carouselCount.textContent = `${String(activeWalk + 1).padStart(2,'0')} / ${String(walkCards.length).padStart(2,'0')}`; }
+function moveCarousel(index, manual = false) {
+  activeWalk = (index + walkCards.length) % walkCards.length;
+  const target = walkCards[activeWalk].getBoundingClientRect().left - carousel.getBoundingClientRect().left + carousel.scrollLeft;
+  carousel.scrollTo({left:target,behavior:reducedMotion.matches?'instant':'smooth'});
+  if (manual) userPauseUntil = Date.now() + 12000;
+  updateCarouselCount();
+}
+document.querySelector('#walk-prev').addEventListener('click',()=>moveCarousel(activeWalk - 1,true));
+document.querySelector('#walk-next').addEventListener('click',()=>moveCarousel(activeWalk + 1,true));
+carousel.addEventListener('keydown',event=>{
+  if (event.target !== carousel || !['ArrowLeft','ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  moveCarousel(activeWalk + (event.key === 'ArrowRight' ? 1 : -1),true);
+});
+carousel.addEventListener('pointerdown',()=>{userPauseUntil = Date.now() + 12000;});
+carousel.addEventListener('scroll',()=>{
+  let closest = 0, distance = Infinity;
+  for (const [index,card] of walkCards.entries()) {
+    const delta = Math.abs(card.getBoundingClientRect().left - carousel.getBoundingClientRect().left);
+    if (delta < distance) { closest = index; distance = delta; }
+  }
+  if (closest !== activeWalk) {activeWalk = closest; updateCarouselCount();}
+},{passive:true});
+const walksSection = document.querySelector('#walks');
+walksSection.addEventListener('mouseenter',()=>{carouselPaused = true;});
+walksSection.addEventListener('mouseleave',()=>{carouselPaused = false;});
+walksSection.addEventListener('focusin',()=>{carouselPaused = true;});
+walksSection.addEventListener('focusout',event=>{if (!walksSection.contains(event.relatedTarget)) carouselPaused = false;});
+motionToggle.addEventListener('click',()=>{
+  const paused = motionToggle.getAttribute('aria-pressed') !== 'true';
+  motionToggle.setAttribute('aria-pressed',String(paused));
+  motionToggle.setAttribute('aria-label',paused?'Продолжить смену прогулок':'Остановить смену прогулок');
+  motionToggle.innerHTML = paused ? '▶ <span>Продолжить</span>' : 'Ⅱ <span>Пауза</span>';
+});
+if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{carouselVisible = entries[0].isIntersecting;},{threshold:.3}).observe(walksSection);
+else carouselVisible = true;
+setInterval(()=>{
+  if (carouselVisible && !carouselPaused && !reducedMotion.matches && motionToggle.getAttribute('aria-pressed') !== 'true' && Date.now() > userPauseUntil && !document.hidden && !document.querySelector('#route-dialog').open) moveCarousel(activeWalk + 1);
+},5200);
+if (reducedMotion.matches) motionToggle.hidden = true;
+reducedMotion.addEventListener('change',event=>{motionToggle.hidden = event.matches;});
+
+const routeDialog = document.querySelector('#route-dialog');
+const dialogImage = document.querySelector('#route-dialog-image');
+const dialogTitle = document.querySelector('#route-dialog-title');
+const dialogDescription = document.querySelector('#route-dialog-description');
+const dialogStops = document.querySelector('#route-dialog-stops');
+let selectedPreset = 'water';
+let returnFocus = null;
+let chooseFromDialog = false;
+function openRoutePreview(button) {
+  selectedPreset = button.dataset.preview;
+  const card = button.closest('.walk-card');
+  const route = pickRoute(presets[selectedPreset]);
+  const image = card.querySelector('.card-photo img');
+  dialogImage.src = image.currentSrc || image.src;
+  dialogImage.alt = image.alt;
+  dialogTitle.textContent = card.querySelector('h3').textContent;
+  dialogDescription.textContent = card.querySelector('p').textContent;
+  document.querySelector('#route-dialog-time').textContent = `${route.time} минут`;
+  document.querySelector('#route-dialog-sound').textContent = route.sound;
+  dialogStops.replaceChildren(...route.stops.map((stop,index)=>{
+    const item = document.createElement('li');
+    const number = document.createElement('span'); number.textContent = String(index+1).padStart(2,'0');
+    item.append(number,document.createTextNode(stop));
+    return item;
+  }));
+  returnFocus = button;
+  routeDialog.showModal();
+}
+document.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>openRoutePreview(button)));
+document.querySelector('#route-dialog-close').addEventListener('click',()=>routeDialog.close());
+routeDialog.addEventListener('click',event=>{if (event.target === routeDialog) routeDialog.close();});
+routeDialog.addEventListener('close',()=>{if (!chooseFromDialog) returnFocus?.focus(); chooseFromDialog = false;});
+document.querySelector('#route-dialog-choose').addEventListener('click',()=>{
+  chooseFromDialog = true;
+  routeDialog.close();
+  const preset = presets[selectedPreset];
+  for (const [key,value] of Object.entries(preset)) form.elements.namedItem(key).value = String(value);
+  sceneButtons.find(button=>button.dataset.scene === preset.sound)?.click();
+  showResult();
+});
 

@@ -177,3 +177,47 @@ body.motion-ready .reveal-item.is-visible{opacity:1;transform:translateY(0)}
 @keyframes premium-gleam{0%,72%,100%{transform:translateX(-180%) skewX(-22deg)}86%{transform:translateX(360%) skewX(-22deg)}}
 @media(max-width:760px){.hero-stamp::before{inset:-7px}.hero-stamp::after{top:-10px;width:6px;height:6px;transform-origin:0 calc(50% + 45px)}}
 @media(prefers-reduced-motion:reduce){.hero-backdrop,.hero-backdrop::before,.hero-stamp::before,.hero-stamp::after,.hero-button::before{animation:none!important}}
+
+/* A moving gallery with a full route preview. */
+.walk-carousel-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:-8px 0 22px}
+.walk-carousel-count{margin-right:auto;color:#7b806c;font-size:.75rem;letter-spacing:.16em;font-weight:700}
+.walk-carousel-controls button{display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:46px;padding:0 12px;border:1px solid #9aab9a;background:transparent;color:#24342f;font-size:1.3rem;transition:background .2s,color .2s,transform .2s}
+.walk-carousel-controls button:hover{background:#243b31;color:#fff;transform:translateY(-2px)}
+.walk-carousel-controls #walk-motion-toggle{gap:8px;min-width:104px;font-size:.85rem}
+.walk-carousel-controls #walk-motion-toggle span{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}
+.walk-carousel-controls button[hidden]{display:none}
+.walk-grid{display:flex;gap:24px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-inline:contain;padding-bottom:12px}
+.walk-grid::-webkit-scrollbar{display:none}
+.walk-card{flex:0 0 min(72%,860px);scroll-snap-align:start}
+.card-photo{display:block;width:100%;padding:0;border:0;background:#243b31;cursor:pointer;text-align:left}
+.card-photo img{height:clamp(360px,41vw,540px)}
+.card-photo:focus-visible{outline:3px solid #8a7545;outline-offset:4px}
+.photo-view{position:absolute;right:20px;bottom:20px;padding:12px 17px;background:#e4ebd6e8;color:#1e392d;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;backdrop-filter:blur(9px);transition:transform .25s,background .25s}
+.card-photo:hover .photo-view,.card-photo:focus-visible .photo-view{transform:translateY(-4px);background:#f1f7e8}
+.walk-card>p{min-height:0;max-width:650px;padding-bottom:20px}
+.walk-card .text-button{width:100%}
+.night-mode .walk-carousel-count{color:#bcc9b9}
+.night-mode .walk-carousel-controls button{color:#eaf2e5;border-color:#798e79}
+.night-mode .walk-carousel-controls button:hover{background:#d9e8c4;color:#24342f}
+.route-dialog{width:min(1110px,calc(100% - 32px));max-height:min(850px,calc(100dvh - 32px));margin:auto;padding:0;border:1px solid #d7d8cb;background:#f4f2ea;color:#24342f;box-shadow:0 40px 100px #0a211fa6;overflow:auto;overscroll-behavior:contain}
+.route-dialog[open]{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);animation:premium-dialog-in .42s cubic-bezier(.2,.8,.2,1) both}
+.route-dialog::backdrop{background:#061914c9;backdrop-filter:blur(8px)}
+.route-dialog-photo{min-height:640px;background:#243b31}
+.route-dialog-photo img{width:100%;height:100%;object-fit:cover}
+.route-dialog-content{padding:58px 55px 48px}
+.route-dialog-content .eyebrow{color:#9c8255;font-size:.66rem;letter-spacing:.18em;font-weight:700}
+.route-dialog h2{font-family:Prata,Georgia,serif;font-weight:400;letter-spacing:-.06em;line-height:1.13;font-size:clamp(2.3rem,3.6vw,4rem);margin:20px 0}
+.route-dialog-content>p:not(.eyebrow):not(.route-dialog-label){font-size:.9rem;line-height:1.8;color:#647168}
+.route-dialog-meta{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 36px}
+.route-dialog-meta span{border:1px solid #aab9a5;padding:8px 12px;font-size:.72rem;letter-spacing:.05em}
+.route-dialog-label{color:#9c8255;font-size:.67rem;font-weight:700;letter-spacing:.16em}
+.route-dialog ol{list-style:none;padding:0;margin:16px 0 32px}
+.route-dialog li{display:flex;gap:16px;align-items:center;padding:11px 0;border-bottom:1px solid #d8d9cc;font-size:.86rem}
+.route-dialog li span{font-size:.67rem;color:#899b82;letter-spacing:.12em}
+.route-dialog-choose{width:100%;display:flex;justify-content:space-between;gap:20px;background:#243b31;color:#fff;border:0;border-radius:0;font-size:.83rem}
+.route-dialog-choose:hover{background:#3e5949}
+.route-dialog-close{position:absolute;z-index:2;top:18px;right:18px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #d2d9cf;background:#edf2e7;color:#24342f;font-size:1.7rem;line-height:1}
+.route-dialog-close:hover{background:#fff}
+@keyframes premium-dialog-in{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){.walk-carousel-controls{margin:0 0 18px}.walk-carousel-controls button{min-width:40px;height:40px}.walk-carousel-controls #walk-motion-toggle{min-width:40px}.walk-carousel-controls #walk-motion-toggle span{display:none}.walk-grid{gap:14px}.walk-card{flex-basis:88%}.card-photo img{height:clamp(280px,85vw,400px)}.photo-view{right:12px;bottom:12px;padding:9px 11px;font-size:.62rem}.walk-card>p{margin-bottom:0}.route-dialog[open]{display:block}.route-dialog-photo{height:245px;min-height:0}.route-dialog-content{padding:34px 24px 28px}.route-dialog h2{font-size:clamp(2rem,8vw,3rem)}.route-dialog-meta{margin:18px 0 27px}.route-dialog-close{top:12px;right:12px}}
+@media(prefers-reduced-motion:reduce){.walk-grid{scroll-behavior:auto}.walk-carousel-controls button,.photo-view{transition:none}.route-dialog[open]{animation:none}}
