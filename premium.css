@@ -105,3 +105,41 @@ legend>span{color:#a3885a}
 @media(max-width:760px){.wrap{width:calc(100% - 36px)}.header{height:72px}.hero{margin-top:-72px;min-height:800px;min-height:100svh}.hero-inner{min-height:800px;min-height:100svh;padding-top:123px;padding-bottom:18px}.hero h1{font-size:clamp(2.7rem,11.2vw,4.6rem);margin-top:45px}.hero .intro{font-size:.87rem;line-height:1.7;max-width:340px;margin-top:24px}.hero-button{margin-top:27px!important;min-width:245px}.hero-stamp{display:flex;top:auto;bottom:175px;right:18px;width:77px;height:77px}.hero-stamp span:first-child,.hero-stamp span:last-child{font-size:.4rem}.hero-stamp span:nth-child(2){font-size:1.5rem}.hero-bottom{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin-top:45px}.scene-switcher{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.scene-button{width:auto;padding:11px 4px;white-space:normal;font-size:.64rem;line-height:1.2}.scene-button span{display:block;margin:0 0 4px}.pause-button{align-self:flex-start}.ticker{padding:12px 0}.ticker>div{font-size:.65rem}.ticker span{margin:0 20px}.how{padding:77px 18px 80px}.section-heading{display:block}.section-heading h2{font-size:clamp(2.2rem,8vw,3.8rem);margin-top:25px}.steps{display:block;margin-top:43px}.steps article,.steps article:first-child{border-right:0;border-bottom:1px solid #ffffff40;padding:22px 0;min-height:0}.steps article:last-child{border-bottom:0}.step-number{margin-bottom:16px}.finder-shell{padding:78px 0 85px}.finder-top h2,.walks-heading h2{font-size:clamp(2.35rem,9vw,4rem)}form{padding:10px 20px 28px}.result{padding:29px 23px}.walks{padding:80px 0}.walk-grid{gap:40px}.card-photo img{height:360px}.walk-card>p{min-height:0;margin-bottom:18px}.closing{padding:42px 26px}.closing p{font-size:clamp(1.8rem,8vw,3rem)}}
 @media(max-width:410px){.header-cta{font-size:.65rem;letter-spacing:.04em}.hero h1{font-size:clamp(2.55rem,10.8vw,3.2rem)}.hero-stamp{bottom:190px}.card-photo img{height:290px}}
 @media(prefers-reduced-motion:reduce){.hero-stamp,.ticker>div,.result.is-revealing,.result.is-revealing .route-line li{animation:none!important}}
+
+/* The time-of-day control changes the same city scenes and the page atmosphere. */
+.time-switch{display:flex;align-items:center;flex:none;padding:4px;border:1px solid #ffffff75;border-radius:100px;background:#f8f8ef21;backdrop-filter:blur(18px)}
+.time-switch button{border:0;border-radius:100px;background:transparent;color:#fff;padding:10px 13px;font-size:.75rem;white-space:nowrap;transition:background .25s,color .25s}
+.time-switch button span{font-size:1rem;margin-right:5px;vertical-align:-1px}
+.time-switch button[aria-pressed="true"]{background:#d8e8c4;color:#1c3029;font-weight:700}
+.time-switch button:hover:not([aria-pressed="true"]){background:#ffffff28}
+body.night-mode{--paper:#17271f;--ink:#edf2e8;--muted:#b3c1b5;--green:#d8e8c4;--line:#526052;--blue:#21352d;background:#17271f;color:#edf2e8;color-scheme:dark}
+.night-mode .hero-backdrop::after{background:linear-gradient(90deg,#081a1bd9 0%,#092023ba 41%,#0a273027 82%),linear-gradient(0deg,#061817dc 0%,transparent 35%,#05182346 100%)}
+.night-mode .hero-stamp{background:#d8d5a9;color:#24342f}
+.night-mode .ticker{background:#293d31;color:#e5ead8;border-color:#536d55}
+.night-mode .ticker span{color:#c8c29a}
+.night-mode .how{background:#12251f}
+.night-mode .section-heading .eyebrow,.night-mode .finder-top .eyebrow,.night-mode .walks-heading .eyebrow{color:#c7bd95}
+.night-mode .finder-shell{background:#17271f}
+.night-mode .finder-top em,.night-mode .walks-heading em{color:#cad8ac}
+.night-mode .finder-top>p,.night-mode .walks-heading>p,.night-mode .walk-card>p{color:#b3c1b5}
+.night-mode form{background:#22372e;border-color:#536355;box-shadow:0 35px 70px #06150e4a}
+.night-mode fieldset{border-color:#526052}
+.night-mode legend>span{color:#c7bd95}
+.night-mode .choices label>span{border-color:#6a7b69;color:#edf2e8}
+.night-mode .choices label:hover>span{border-color:#d8e8c4}
+.night-mode .choices input:checked+span{background:#d8e8c4;border-color:#d8e8c4;color:#1c3029}
+.night-mode .form-bottom .button{background:#d8e8c4;color:#1c3029}
+.night-mode .form-bottom .button:hover{background:#eef5e4}
+.night-mode .result{background:#2a4437;box-shadow:0 28px 60px #06150e66}
+.night-mode .walk-card h3{color:#edf2e8}
+.night-mode .card-meta{color:#c7bd95}
+.night-mode .time-badge{background:#20362de8;color:#edf2e8}
+.night-mode .text-button{border-color:#526052;color:#edf2e8}
+.night-mode .text-button:hover{color:#d8e8c4}
+.night-mode .closing{background:#10231d}
+.night-mode .closing em{color:#d8e8c4}
+.night-mode .closing a:hover{color:#20382c}
+.night-mode .pause-panel{background:#253b30;color:#edf2e8;border-color:#6a7b69}
+.night-mode .pause-panel div>span{color:#b3c1b5}
+@media(max-width:760px){.hero-bottom{gap:11px}.time-switch{align-self:flex-start;order:-1}.time-switch button{padding:9px 13px}.hero-stamp{bottom:206px}.hero{min-height:835px}.hero-inner{min-height:835px}}
+@media(max-width:410px){.hero-stamp{bottom:215px}}
